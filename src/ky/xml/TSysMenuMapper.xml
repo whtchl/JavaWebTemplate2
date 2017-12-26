@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.TSysMenuMapper'>
+
+	<resultMap type="ky.entity.TSysMenu" id="resultMap">
+		<id column="menu_id" property="menuId" />
+		<result column="platform_id" property="platformId" />
+		<result column="menu_name" property="menuName" />
+		<result column="menu_level" property="menuLevel" />
+		<result column="parentid" property="parentid" />
+		<result column="menu_href" property="menuHref" />
+		<result column="user_id" property="userId" />
+		<result column="role_id" property="roleId" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.menuId !=null  and  searchBean.menuId!=0">
+							and obj.menu_id=#{searchBean.menuId}
+						</if>
+					<if test="searchBean.platformId !=null  and  searchBean.platformId!=0">
+							and obj.platform_id=#{searchBean.platformId}
+						</if>
+					<if test="searchBean.menuName !=null  and  searchBean.menuName!=''">
+							and obj.menu_name=#{searchBean.menuName}
+						</if>
+					<if test="searchBean.menuLevel !=null  and  searchBean.menuLevel!=0">
+							and obj.menu_level=#{searchBean.menuLevel}
+						</if>
+					<if test="searchBean.parentid !=null  and  searchBean.parentid!=0">
+							and obj.parentid=#{searchBean.parentid}
+						</if>
+					<if test="searchBean.menuHref !=null  and  searchBean.menuHref!=''">
+							and obj.menu_href=#{searchBean.menuHref}
+						</if>
+					<if test="searchBean.platformId ==null">
+						and obj.platform_id=1
+					</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM T_SYS_MENU obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.sort desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+	
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.TSysMenu">
+		select * from T_SYS_MENU
+		<where>
+				<if test="menuId !=null  and  menuId!=0">
+				and menu_id=#{menuId}
+			</if>
+				<if test="platformId !=null  and  platformId!=0">
+				and platform_id=#{platformId}
+			</if>
+				<if test="menuName !=null  and  menuName!=''">
+				and menu_name in #{menuName}
+			</if>
+				<if test="menuLevel !=null  and  menuLevel!=0">
+				and menu_level=#{menuLevel}
+			</if>
+				<if test="parentid !=null  and  parentid!=0">
+				and parentid=#{parentid}
+			</if>
+				<if test="menuHref !=null  and  menuHref!=''">
+				and menu_href like '%' || #{menuHref} || '%'
+			</if>
+			<if test="platformId ==null">
+				and platform_id=1
+			</if>
+		</where>
+		order by sort asc 
+	</select>
+
+	<select id="selectList1" resultMap="resultMap" parameterType="ky.entity.TSysMenu">
+		select * from (select sm.*,um.user_id from T_SYS_MENU sm left join T_sys_user_menu um on um.menu_id=sm.menu_id)
+		<where>
+				<if test="menuId !=null  and  menuId!=0">
+				and menu_id=#{menuId}
+			</if>
+				<if test="platformId !=null  and  platformId!=0">
+				and platform_id=#{platformId}
+			</if>
+				<if test="menuName !=null  and  menuName!=''">
+				and menu_name in #{menuName}
+			</if>
+				<if test="menuLevel !=null  and  menuLevel!=0">
+				and menu_level=#{menuLevel}
+			</if>
+				<if test="parentid !=null  and  parentid!=0">
+				and parentid=#{parentid}
+			</if>
+				<if test="menuHref !=null  and  menuHref!=''">
+				and menu_href=#{menuHref}
+			</if>
+			<if test="userId!=null and userId!=''">
+				and user_id=#{userId}
+			</if>
+			<if test="platformId ==null">
+				and platform_id=1
+			</if>
+		</where>
+		order by menu_level asc,sort asc
+	</select>
+	
+	<select id="selectList2" resultMap="resultMap" parameterType="ky.entity.TSysMenu">
+		select * from (select sm.*,um.role_id from T_SYS_MENU sm left join T_sys_role_menu um on um.menu_id=sm.menu_id)
+		<where>
+				<if test="menuId !=null  and  menuId!=0">
+				and menu_id=#{menuId}
+			</if>
+				<if test="platformId !=null  and  platformId!=0">
+				and platform_id=#{platformId}
+			</if>
+				<if test="menuName !=null  and  menuName!=''">
+				and menu_name in #{menuName}
+			</if>
+				<if test="menuLevel !=null  and  menuLevel!=0">
+				and menu_level=#{menuLevel}
+			</if>
+				<if test="parentid !=null  and  parentid!=0">
+				and parentid=#{parentid}
+			</if>
+				<if test="menuHref !=null  and  menuHref!=''">
+				and menu_href=#{menuHref}
+			</if>
+			<if test="roleId!=null and roleId!=''">
+				and role_id=#{roleId}
+			</if>
+			<if test="platformId ==null">
+				and platform_id=1
+			</if>
+		</where>
+		order by menu_level asc,sort asc
+	</select>
+
+	<insert id="save" parameterType="ky.entity.TSysMenu">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into T_SYS_MENU(platform_id,menu_name,menu_level,parentid,menu_href)
+		values(#{platformId,jdbcType=INTEGER},#{menuName,jdbcType=VARCHAR},#{menuLevel,jdbcType=INTEGER},#{parentid,jdbcType=INTEGER},#{menuHref,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from T_SYS_MENU
+		where menu_id=#{id} and platform_id=1
+	</delete>
+	
+	
+
+	<update id='update' parameterType='ky.entity.TSysMenu'>
+		update T_SYS_MENU set
+		menu_id = #{menuId,jdbcType=INTEGER},
+		platform_id = #{platformId,jdbcType=INTEGER},
+		menu_name = #{menuName,jdbcType=VARCHAR},
+		menu_level = #{menuLevel,jdbcType=INTEGER},
+		parentid = #{parentid,jdbcType=INTEGER},
+		menu_href = #{menuHref,jdbcType=VARCHAR}
+		where menu_id=#{menuId} 
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from T_SYS_MENU obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+	
+	
+	 <select id="menuLevelGroup" resultType="java.lang.Integer" >
+	     select menu_level from T_SYS_MENU where platform_id=1 group by menu_level order by menu_level
+	 </select>
+	 
+	 
+	 <select id="ifPassPowerCheck" resultType="int"	parameterType="java.util.HashMap">
+		SELECT 1 FROM (
+				SELECT m.menu_id menu_id
+					 FROM t_sys_menu m ,t_sys_user_menu u 
+					WHERE m.menu_id = u.menu_id
+					 AND u.user_id=#{user_id} 
+					 and m.PLATFORM_ID = #{platform_id}
+				UNION ALL 
+				 SELECT m.menu_id menu_id
+				    FROM t_sys_menu m ,t_sys_role_menu r 
+				  WHERE m.menu_id = r.menu_id 
+				  AND r.role_id=#{role_id}
+				  and m.PLATFORM_ID = #{platform_id}
+				) t WHERE menu_id=#{menu_id}
+	</select>
+
+</mapper>
+

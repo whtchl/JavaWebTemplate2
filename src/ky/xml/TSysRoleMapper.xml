@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.TSysRoleMapper'>
+
+	<resultMap type="ky.entity.TSysRole" id="resultMap">
+	    <id column="role_id" property="roleId" />
+		<result column="role_name" property="roleName" />
+		<result column="levels" property="levels" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.roleName !=null  and  searchBean.roleName!=''">
+							and obj.role_name=#{searchBean.roleName}
+						</if>
+					<if test="searchBean.roleId !=null  and  searchBean.roleId!=0">
+							and obj.role_id=#{searchBean.roleId}
+						</if>
+					<if test="searchBean.levels !=null  and  searchBean.levels!=0">
+							and obj.levels=#{searchBean.levels}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM T_SYS_ROLE obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.role_id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.TSysRole">
+		select * from T_SYS_ROLE
+		<where>
+				<if test="roleName !=null  and  roleName!=''">
+				and role_name=#{roleName}
+			</if>
+				<if test="roleId !=null  and  roleId!=0">
+				and role_id=#{roleId}
+			</if>
+				<if test="levels !=null  and  levels!=0">
+				and levels=#{levels}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.TSysRole">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into T_SYS_ROLE(role_name,levels)
+		values(#{roleName,jdbcType=VARCHAR},#{levels,jdbcType=INTEGER})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from T_SYS_ROLE
+		where role_id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.TSysRole'>
+		update T_SYS_ROLE set
+		role_name = #{roleName,jdbcType=VARCHAR},
+		role_id = #{roleId,jdbcType=INTEGER},
+		levels = #{levels,jdbcType=INTEGER}
+		where role_id=#{roleId}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from T_SYS_ROLE obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+

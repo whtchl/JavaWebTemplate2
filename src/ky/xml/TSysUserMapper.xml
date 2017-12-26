@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.TSysUserMapper'>
+
+	<resultMap type="ky.entity.TSysUser" id="resultMap">
+	    <id column="id" property="id" />
+		<result column="user_status" property="userStatus" />
+		<result column="login_name" property="loginName" />
+		<result column="true_name" property="trueName" />
+		<result column="role_id" property="roleId" />
+		<result column="department_id" property="departmentId" />
+		<result column="pwd_date" property="pwdDate" />
+		<result column="mobileno" property="mobileno" />
+		<result column="login_pwd" property="loginPwd" />
+		<result column="email" property="email" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.userStatus !=null  and  searchBean.userStatus!=0">
+							and obj.user_status=#{searchBean.userStatus}
+						</if>
+					<if test="searchBean.loginName !=null  and  searchBean.loginName!=''">
+							and obj.login_name=#{searchBean.loginName}
+						</if>
+					<if test="searchBean.trueName !=null  and  searchBean.trueName!=''">
+							and obj.true_name=#{searchBean.trueName}
+						</if>
+					<if test="searchBean.roleId !=null  and  searchBean.roleId!=0">
+							and obj.role_id=#{searchBean.roleId}
+						</if>
+					<if test="searchBean.departmentId !=null  and  searchBean.departmentId!=''">
+							and obj.department_id=#{searchBean.departmentId}
+						</if>
+					<if test="searchBean.pwdDate !=null  and  searchBean.pwdDate!=''">
+							and obj.pwd_date=#{searchBean.pwdDate}
+						</if>
+					<if test="searchBean.id !=null  and  searchBean.id!=0">
+							and obj.id=#{searchBean.id}
+						</if>
+					<if test="searchBean.mobileno !=null  and  searchBean.mobileno!=''">
+							and obj.mobileno=#{searchBean.mobileno}
+						</if>
+					<if test="searchBean.loginPwd !=null  and  searchBean.loginPwd!=''">
+							and obj.login_pwd=#{searchBean.loginPwd}
+						</if>
+					<if test="searchBean.email !=null  and  searchBean.email!=''">
+							and obj.email=#{searchBean.email}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM T_SYS_USER obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.TSysUser">
+		select * from T_SYS_USER
+		<where>
+				<if test="userStatus !=null  and  userStatus!=0">
+				and user_status=#{userStatus}
+			</if>
+				<if test="loginName !=null  and  loginName!=''">
+				and login_name=#{loginName}
+			</if>
+				<if test="trueName !=null  and  trueName!=''">
+				and true_name=#{trueName}
+			</if>
+				<if test="roleId !=null  and  roleId!=0">
+				and role_id=#{roleId}
+			</if>
+				<if test="departmentId !=null  and  departmentId!=''">
+				and department_id=#{departmentId}
+			</if>
+				<if test="pwdDate !=null  and  pwdDate!=''">
+				and pwd_date=#{pwdDate}
+			</if>
+				<if test="id !=null  and  id!=0">
+				and id=#{id}
+			</if>
+				<if test="mobileno !=null  and  mobileno!=''">
+				and mobileno=#{mobileno}
+			</if>
+				<if test="loginPwd !=null  and  loginPwd!=''">
+				and login_pwd=#{loginPwd}
+			</if>
+				<if test="email !=null  and  email!=''">
+				and email=#{email}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.TSysUser">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into T_SYS_USER(user_status,login_name,true_name,role_id,department_id,pwd_date,mobileno,login_pwd,email)
+		values(#{userStatus,jdbcType=INTEGER},#{loginName,jdbcType=VARCHAR},#{trueName,jdbcType=VARCHAR},#{roleId,jdbcType=INTEGER},#{departmentId,jdbcType=VARCHAR},#{pwdDate,jdbcType=VARCHAR},#{mobileno,jdbcType=VARCHAR},#{loginPwd,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from T_SYS_USER
+		where id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.TSysUser'>
+		update T_SYS_USER set
+		user_status = #{userStatus,jdbcType=INTEGER},
+		login_name = #{loginName,jdbcType=VARCHAR},
+		true_name = #{trueName,jdbcType=VARCHAR},
+		role_id = #{roleId,jdbcType=INTEGER},
+		department_id = #{departmentId,jdbcType=VARCHAR},
+		pwd_date = #{pwdDate,jdbcType=VARCHAR},
+		id = #{id,jdbcType=INTEGER},
+		mobileno = #{mobileno,jdbcType=VARCHAR},
+		login_pwd = #{loginPwd,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from T_SYS_USER obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+

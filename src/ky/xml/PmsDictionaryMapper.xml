@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.PmsDictionaryMapper'>
+
+	<resultMap type="ky.entity.PmsDictionary" id="resultMap">
+	    <id column="id" property="id" />
+		<result column="description" property="description" />
+		<result column="type" property="type" />
+		<result column="value" property="value" />
+		<result column="key" property="key" />
+		<result column="canupdate" property="canupdate" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.description !=null  and  searchBean.description!=''">
+							and obj.description=#{searchBean.description}
+						</if>
+					<if test="searchBean.id !=null  and  searchBean.id!=0">
+							and obj.id=#{searchBean.id}
+						</if>
+					<if test="searchBean.type !=null  and  searchBean.type!=''">
+							and obj.type=#{searchBean.type}
+						</if>
+					<if test="searchBean.value !=null  and  searchBean.value!=''">
+							and obj.value=#{searchBean.value}
+						</if>
+					<if test="searchBean.key !=null  and  searchBean.key!=''">
+							and obj.key=#{searchBean.key}
+						</if>
+					<if test="searchBean.canupdate !=null  and  searchBean.canupdate!=''">
+							and obj.canupdate=#{searchBean.canupdate}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM PMS_DICTIONARY obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.PmsDictionary">
+		select * from PMS_DICTIONARY
+		<where>
+				<if test="description !=null  and  description!=''">
+				and description=#{description}
+			</if>
+				<if test="id !=null  and  id!=0">
+				and id=#{id}
+			</if>
+				<if test="type !=null  and  type!=''">
+				and type=#{type}
+			</if>
+				<if test="value !=null  and  value!=''">
+				and value=#{value}
+			</if>
+				<if test="key !=null  and  key!=''">
+				and key=#{key}
+			</if>
+				<if test="canupdate !=null  and  canupdate!=''">
+				and canupdate=#{canupdate}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.PmsDictionary">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into PMS_DICTIONARY(description,type,value,key,canupdate)
+		values(#{description,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR},#{key,jdbcType=VARCHAR},#{canupdate,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from PMS_DICTIONARY
+		where id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.PmsDictionary'>
+		update PMS_DICTIONARY set
+		description = #{description,jdbcType=VARCHAR},
+		id = #{id,jdbcType=INTEGER},
+		type = #{type,jdbcType=VARCHAR},
+		value = #{value,jdbcType=VARCHAR},
+		key = #{key,jdbcType=VARCHAR},
+		canupdate = #{canupdate,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from PMS_DICTIONARY obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<context:component-scan base-package="ky.dao*" />
+	<context:component-scan base-package="ky.service*" />
+	<context:component-scan base-package="ky.action" />
+	<context:component-scan base-package="ky.xml*" />
+	<context:component-scan base-package="ky.mysqlXml*" />
+	<context:component-scan base-package="ky.util*" />
+	<context:component-scan base-package="ky.filter" />
+	<context:component-scan base-package="ky.noTransactionSer*" />
+	<context:component-scan base-package="ky.schedue.**"/>
+	
+	<bean id="propertyConfigurer"  
+	    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+	    <property name="location" value="classpath:jdbc.properties" />
+	</bean>
+	
+	<bean id="SpringContextUtil" class="ky.util.SpringContextUtil" />
+	<!-- getGlobalContext -->
+	<bean class="ky.util.GlobalContext"></bean>
+	<!--  -->
+	<bean id="TSysMenuSerForFilter" class="ky.service.Impl.TSysMenuServiceImpl"></bean>
+
+	<!-- 配置数据源dataSourceJK 连接接口库 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		
+		<property name="driverClass">
+			<value>${dataSource.driver}</value>
+		</property>
+		<property name="jdbcUrl">
+ 		<value>${dataSource.url}</value> 
+		</property>
+		<property name="user">
+			<value>${dataSource.username}</value>
+		</property>
+		<property name="password">
+			<value>${dataSource.password}</value> 
+		</property>
+	</bean>
+
+	<!--  创建SqlSessionFactory  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>    
+
+	
+	<!-- 注入sqlSessionTemplate实例    -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">    
+    	<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean> 
+	
+	   
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate" />
+		<property name="basePackage" value="ky.xml" />
+	</bean> 
+	
+
+
+	<!-- <bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean> -->
+
+<!-- 配置事务的传播特性 -->
+<!-- 	<tx:advice id="userTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*"  isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="add*" isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="remove*" isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+			<tx:method name="find*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" />
+			<tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="select*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice> -->
+
+<!--  配置参与事务的类 -->
+<!-- 	<aop:config>
+		<aop:pointcut id="pc" expression="execution(* ky.service.*.*(..))" /> 把事务控制在Service层
+		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
+	</aop:config> -->
+	
+	
+<!-- =================================================================== -->  
+    <!-- 数据源2 -->  
+    <bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">    
+    	<property name="driverClass" value="${dataSource2.driver}" />    
+   		<property name="jdbcUrl" value="${dataSource2.url}" />
+    	<property name="user" value="${dataSource2.username}" />    
+    	<property name="password" value="${dataSource2.password}" /> 
+    	
+    	 <!--<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/huitouke_v41?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;mysqlEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull" />
+    	 <property name="user" value="huitouke_v41" />    
+    	 <property name="password" value="KDJl8W@^KG8l" />  -->  
+    	
+<!--    	连接池中保留的最小连接数。     -->
+    	<property name="minPoolSize" value="5" />
+    	<property name="maxPoolSize" value="20" />
+<!--    	最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+    	<property name="maxIdleTime" value="60" />  
+<!--    	当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+    	<property name="acquireIncrement" value="5" />  
+    	<property name="maxStatements" value="0" />
+<!--    	初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3  -->
+    	<property name="initialPoolSize" value="10" />  
+<!--    	c3p0自动建立表c3p0Test测试连接的有效性  -->
+     	<property name="automaticTestTable" value="c3p0Test" />
+<!--     	每60秒检查所有连接池中的空闲连接。Default: 0  -->
+    	<property name="idleConnectionTestPeriod" value="60" />
+<!--    	定义在从数据库获取新连接失败后重复尝试的次数。Default: 30  -->
+    	<property name="acquireRetryAttempts" value="30" />
+<!--    	因性能消耗大请只在需要的时候使用它。如果设为true那么在每个connection提交的时候都将校验其有效性。-->
+<!--    	建议使用idleConnectionTestPeriod或automaticTestTable等方法来提升连接测试的性能。Default: false  -->
+    	<property name="testConnectionOnCheckout" value="false" />     
+	</bean>
+      
+    <bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource2" />  
+    </bean>  
+    
+    <!-- 注入sqlSessionTemplate实例    -->
+	<bean id="sqlSessionTemplate2" class="org.mybatis.spring.SqlSessionTemplate">    
+    	<constructor-arg index="0" ref="sqlSessionFactory2" />
+	</bean>
+	
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory2"/>  
+        <property name="basePackage" value="ky.xmlMysql" />  
+    </bean>  
+      
+    <!-- <bean id="transactionManager2"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource2" />  
+    </bean>  
+  
+    全注解方式  
+    <tx:annotation-driven transaction-manager="transactionManager2" />  
+	 -->
+	
+	
+	
+	
+<!-- 异步任务 -->  
+<!-- 	<task:annotation-driven />   -->
+<!--
+	<bean id="TZeroAuditTiming" class="ky.AuditTiming.impl.TZeroAuditServiceImpl"></bean>
+	<bean id="transferPool" class="ky.AuditTiming.impl.TZeroAuditServiceImpl"></bean>
+	<task:scheduled-tasks>
+		<task:scheduled ref="TZeroAuditTiming" method="TZeroAuditTiming" cron="0/60 * *  * * ?" /> 
+		<task:scheduled ref="transferPool" method="transferPool" cron="0/60 * *  * * ?" /> 		
+	</task:scheduled-tasks>  
+ -->
+	<!-- 定时查询 -->
+	
+	
+	<!-- <bean id="asynService" class="com.googlecode.asyn4j.spring.AsynServiceFactoryBean">
+		设置自定义相关参数
+		<property name="maxCacheWork" value="100"></property>
+		<property name="addWorkWaitTime" value="2000"></property>
+		<property name="workThreadNum" value="10"></property>
+		<property name="callbackThreadNum" value="2"></property>
+		<property name="closeServiceWaitTime" value="10000"></property>
+		添加相关处理器
+		<property name="errorAsynWorkHandler">
+			<bean
+				class="com.googlecode.asyn4j.core.handler.DefaultErrorAsynWorkHandler" />
+		</property>
+		<property name="workQueueFullHandler">
+			<bean class="com.googlecode.asyn4j.core.handler.CacheAsynWorkHandler" />
+		</property>
+		<property name="asynServiceCloseHandler" ref="asynServiceCloseHandler">
+		</property>
+	</bean> -->
+
+
+</beans>
