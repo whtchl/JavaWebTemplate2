@@ -76,7 +76,7 @@
 	<body >
 	<img src="../images/login.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
 		<form id="form" name=AdminLogin
-			action="/lf_pms/login/main.action" method="post">
+			action="/JavaWebTemplate2/login/main.action" method="post">
 			<div class="login">
 				<table style="line-height:45px;">
 					<tr>
@@ -103,7 +103,7 @@
 						<td>
 							<div style="width: 50px; float: right;">
 								<IMG id="imgObj" onclick="changeImg()" alt=点击刷新
-									src="/lf_pms/verifycode/verifyCode.action"
+									src="/JavaWebTemplate2/verifycode/verifyCode.action"
 									border=0 />
 							</div>
 							

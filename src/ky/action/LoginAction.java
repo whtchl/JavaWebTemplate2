@@ -19,6 +19,7 @@ import ky.service.TSysMenuService;
 import ky.service.TSysRoleService;
 import ky.service.TSysUserService;
 import ky.util.Encryption;
+import net.sf.json.JSONArray;
 
 @ParentPackage("struts-default")
 @Namespace("/login")
@@ -165,11 +166,11 @@ public class LoginAction extends BaseAction<TSysUser> {
 		return "checkUser";
 	}
 	public void init(){
-		/*TSysUser u = (TSysUser) this.session.getAttribute("user");
+		TSysUser u = (TSysUser) this.session.getAttribute("user");
 		
 		int uid = u.getId().intValue();
 		int rid = u.getRoleId().intValue();
-		setAttribute("oneMenuList",JSONArray.fromObject(tsms.getchildMenu(uid)));*/
+		setAttribute("oneMenuList",JSONArray.fromObject(tsms.getchildMenu(uid)));
 	}
 	
 	public void getRoleName(){
@@ -178,6 +179,5 @@ public class LoginAction extends BaseAction<TSysUser> {
 		TSysRole role = new TSysRole();
 		role.setRoleId(u.getRoleId());
 		sess.setAttribute("RoleName", this.TSysRoleSer.selectRoleName(role));
-		
 	}
 }
