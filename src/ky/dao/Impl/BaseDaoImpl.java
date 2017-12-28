@@ -22,10 +22,12 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	// //获取Mapper的路径
 	public String getPath(Class<? extends Object> class1, String methodType) {
+		System.out.println( path + class1.getSimpleName() + "Mapper." + methodType);
 		return path + class1.getSimpleName() + "Mapper." + methodType;
 	}
 
 	public String getPath(String methodType) {
+		System.out.println("ky.xml." + this.clazz.getSimpleName() + "Mapper." + methodType);
 		return "ky.xml." + this.clazz.getSimpleName() + "Mapper." + methodType;
 	}
 
@@ -46,6 +48,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	public List<T> selectList(T t) {
+	    System.out.println("BaseDaoImpl:"+t.getClass().getSimpleName());
 		return this.session.selectList(getPath("selectList"), t);
 	}
 

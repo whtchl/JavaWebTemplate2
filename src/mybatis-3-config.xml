@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd">
 <configuration>
-
+    <!-- 配置指定使用log4j输出日志 -->
+	<settings>
+	    <setting name="logImpl" value="LOG4J"/>
+	</settings>
+	
+	 <!--    <settings>  
+        <setting name="logImpl" value="STDOUT_LOGGING"/>  
+    </settings>  --> 
 </configuration>
 
 

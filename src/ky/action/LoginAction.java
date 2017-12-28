@@ -61,8 +61,10 @@ public class LoginAction extends BaseAction<TSysUser> {
 			// model.setLoginPwd(Encryption.MD5(model.getLoginPwd()));// md5
 			// 加密密码
 			// }
-			model.setLoginName(Encryption.MD5(model.getLoginPwd()));
+			//System.out.println("user:"+model.getLoginName()+"pwd:"+model.getLoginPwd());
+			model.setLoginPwd(Encryption.MD5(model.getLoginPwd()));// md5  加密密码
 			List list = this.userSer.selectList(model);// 查询用户信息
+			System.out.println("list size:"+list.size());
 			if (list.size() > 0) {
 				TSysUser user = this.userSer.selectList(model).get(0);
 				if (model.getLoginPwd().equals(Encryption.MD5("123456"))) // 如果密码是初级密码，到修改密码进行修改
@@ -94,7 +96,6 @@ public class LoginAction extends BaseAction<TSysUser> {
 	
 	@Action(value = "login", results={@Result(name="login",location="/login.jsp")})
 	public String toLogin(){
-		System.out.println("this is login");
 		return "login";
 	}
 	

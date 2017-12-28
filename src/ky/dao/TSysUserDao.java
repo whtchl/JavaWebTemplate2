@@ -18,6 +18,9 @@ import ky.util.PageView;
 */
 @Repository
 public interface TSysUserDao extends BaseDao<TSysUser>{
+	public int deletep(String id);
+	public int update1(TSysUser obj);
+	public int update2(TSysUser user);
 
 }
 

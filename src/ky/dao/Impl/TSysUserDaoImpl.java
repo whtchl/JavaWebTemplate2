@@ -19,5 +19,20 @@ import ky.util.PageView;
 */
 @Repository
 	public class TSysUserDaoImpl extends BaseDaoImpl<TSysUser> implements TSysUserDao{
+
+	@Override
+	public int deletep(String id) {
+		return session.delete(getPath("deletep"),id);
+	}
+
+	@Override
+	public int update1(TSysUser obj) {
+		return session.update(getPath("update1"),obj);
+	}
+
+	@Override
+	public int update2(TSysUser user) {
+		return session.update(getPath("update2"),user);
+	}
 }
 

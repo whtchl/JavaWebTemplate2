@@ -28,7 +28,6 @@ public class PowerCheckFilter implements Filter {
 		TSysUser user = (TSysUser)request.getSession().getAttribute("user");
 		String url = request.getRequestURI();
 		System.out.println("[PowerCheckFilter]url:" + url);
-		System.out.println("##"+request.getContextPath());
 		if(user == null){
 			//没有登录时,不能访问除登录以外的action
 			if(url.endsWith(".action") && url.indexOf("login")<0 && url.indexOf("verifycode")<0){
