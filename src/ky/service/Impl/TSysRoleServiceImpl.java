@@ -63,8 +63,12 @@ public class TSysRoleServiceImpl extends BaseServiceImpl implements TSysRoleServ
 
 	@Override
 	public String selectRoleName(TSysRole paramTSysRole) {
-		// TODO Auto-generated method stub
-		return null;
+		String roleName="";
+		List trole = this.tsysroleDao.selectList(paramTSysRole);
+		if (trole.size() > 0) {
+		    roleName = ((TSysRole)trole.get(0)).getRoleName();
+		}
+		return roleName;
 	}
 
 }

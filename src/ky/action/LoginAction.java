@@ -36,7 +36,7 @@ public class LoginAction extends BaseAction<TSysUser> {
 	private TSysMenuService tsms;
 
 	@Action(value = "main", results = { @Result(name = "loginError", type = "chain", location = "login"),
-			@Result(name = "main", location = "/admincontriol.jsp"),
+			@Result(name = "main", location = "/admincontrol.jsp"),
 			@Result(name = "changePwd", location = "/changePwd.jsp") })
 	public String login() {
 		String loginmsg = "登录成功！";
