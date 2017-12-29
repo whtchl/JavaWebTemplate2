@@ -13,7 +13,63 @@
 	<script type="text/javascript" src="../jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>  
 	<script type="text/javascript" src="../jquery-easyui-1.3.2/jquery.easyui.min.js"></script>  
 	<script type="text/javascript" src="../js/config.js" ></script>   
-	
+	<script type="text/javascript">
+	 $(function(){
+	 	window.setInterval("checkuser()", 30*60*1000+1000);
+		/* $("#LoginUPdateDiv").dialog({
+			onBeforeClose: function () { //当面板关闭之前触发的事件
+				window.location.href="/lf_pms/login/login.action";
+			}
+		}); */
+	 
+	         setInterval("getCurrentTime()", "1000");//获得系统时间
+		/* 	 $('#menu ul').tree({
+			    onClick: function(node){
+			          temp=node;
+			          if($('#menu ul').tree('isLeaf',temp.target)){
+			             //最内层的菜单点击事件时,在主页面中加载tab
+			              $.post("/lf_pms/tsysmenu/select.action?idArray="+node.id,function(data){
+			                   addTab(data[0].menuName,data[0].menuHref);
+			              },'json')
+	                  } 
+			    }
+			}); */
+			 <%--
+			$("#updateDiv").window({
+				onBeforeClose :function(){
+					// 调用 'refresh' 方法更新选项卡面板的内容
+					//alert($("#PmsMerchantInfoTab").datagrid("load"));
+					var tab = $('#centre').tabs('getSelected');  // 获取选择的面板
+					var a = tab.panel()[0].children[0];
+					if (a)
+					a.onload = function (){
+						var ss = a.contentDocument.getElementById("PmsMerchantInfoTab");
+						alert($(a.contentDocument).children(".datagrid-view").length);
+						$(a.contentDocument).children(".datagrid-view").datagrid("reload");
+						alert('');
+					}
+					//tab.panel('refresh');
+				}
+			});
+			$("#detailDiv").window({
+				onBeforeClose :function(){
+					alert($("#PmsMerchantInfoTab").datagrid("load"));
+					// 调用 'refresh' 方法更新选项卡面板的内容
+					//var tab = $('#centre').tabs('getSelected');  // 获取选择的面板
+					//tab.panel('refresh');
+				}
+			});
+			--%>
+			//addTabFr();
+// 			loadnotice();
+	    })  
+	    
+   		  //获得系统时间
+     function getCurrentTime() {
+		 $("#timeInfo").html(new Date().toLocaleString()+'  星期'+'日一二三四五六'.charAt(new Date().getDay()));
+      }
+   	
+	</script>
 	
 	
 	<body id="maindiv" style="margin: 0px;padding: 0px;" class="easyui-layout" >

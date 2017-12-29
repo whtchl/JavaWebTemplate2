@@ -18,6 +18,7 @@ import ky.util.PageView;
 */
 @Repository
 public interface TSysMenuDao extends BaseDao<TSysMenu>{
+	 public List<TSysMenu> selectList1(TSysMenu tsm);
 
 }
 

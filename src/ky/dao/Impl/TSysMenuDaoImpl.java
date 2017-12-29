@@ -19,5 +19,8 @@ import ky.util.PageView;
 */
 @Repository
 	public class TSysMenuDaoImpl extends BaseDaoImpl<TSysMenu> implements TSysMenuDao{
+	public List<TSysMenu> selectList1(TSysMenu tsm) {
+		return this.session.selectList(getPath("selectList1"),tsm);
+	}
 }
 
