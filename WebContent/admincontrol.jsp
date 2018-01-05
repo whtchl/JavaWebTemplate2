@@ -29,11 +29,12 @@
 							temp = node;
 							if ($('#menu ul').tree('isLeaf', temp.target)) {
 								//最内层的菜单点击事件时,在主页面中加载tab
-								$.post("/JavaWebTemplate2/tsysmenu/select.action?idArray="
+								 $.post("/JavaWebTemplate2/tsysmenu/select.action?idArray="
 												+ node.id, function(data) {
 											addTab(data[0].menuName,
 													data[0].menuHref);
-										}, 'json')
+										}, 'json') 
+								//window.location.href = "/JavaWebTemplate2/login/login.action";
 							}
 						}
 					});

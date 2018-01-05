@@ -28,6 +28,23 @@ public class TSysMenuServiceImpl extends BaseServiceImpl implements TSysMenuServ
 	@Autowired
 	private TSysMenuDao tsysmenuDao;
 
+	
+	public List<TSysMenu> selectList(String idArray, String menuLevel,
+			String parentId) {
+		TSysMenu obj = new TSysMenu();
+		if ((idArray != null) && (idArray != "")) {
+			obj.setMenuId(Integer.valueOf(Integer.parseInt(idArray)));
+		}
+		if ((menuLevel != null) && (menuLevel != "")) {
+			obj.setMenuLevel(Integer.valueOf(Integer.parseInt(menuLevel)));
+		}
+		if ((parentId != null) && (parentId != "")) {
+			obj.setParentid(Integer.valueOf(Integer.parseInt(parentId)));
+		}
+		List list = this.tsysmenuDao.selectList(obj);
+		return list;
+	}
+	
 	public PageView selectPage(PageView pageView) {
 		return tsysmenuDao.getPageView(pageView);
 	}

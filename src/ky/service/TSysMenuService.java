@@ -26,5 +26,6 @@ public interface TSysMenuService{
 	public int delete(String idArray);
 	public int update(TSysMenu obj);
 	 public abstract List getchildMenu(int paramInt);
+	 public abstract List<TSysMenu> selectList(String paramString1, String paramString2, String paramString3);
 }
 

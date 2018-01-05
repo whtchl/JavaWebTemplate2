@@ -4,6 +4,8 @@ package ky.action;
 import ky.entity.TSysMenu;
 import ky.service.TSysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 public class TSysMenuAction extends BaseAction<TSysMenu>{
 
 	@Autowired
+	@Qualifier("TSysMenuSerForFilter")
 	private TSysMenuService TSysMenuSer;
 	@Action(value = "selectPage", results = {@Result(name = "selectPage", location = "/pages/TSysMenu/list.jsp") })
 	public String seletePage(){
@@ -41,7 +44,7 @@ public class TSysMenuAction extends BaseAction<TSysMenu>{
 		return "selectPage";
 	}
 
-	@Action(value = "select", results = {@Result(name = "select", location = "/index.jsp") })///pages/TSysMenu/list.jsp
+	@Action(value = "select", results = {@Result(name = "select", location = "/pages/TSysMenu/list.jsp") })///pages/TSysMenu/list.jsp
 	public String select(){
 
 		//List<TSysMenu> list = TSysMenuSer.selectList(model);
@@ -50,8 +53,8 @@ public class TSysMenuAction extends BaseAction<TSysMenu>{
 		String idArray = getParameter("idArray");
 		String parentId = getParameter("parentId");
 		System.out.println("idArray:"+idArray+" parentId:"+parentId);
-		/*List list = this.TSysMenuSer.selectList(idArray, null, parentId);
-		jsonArray(list);*/
+		List list = this.TSysMenuSer.selectList(idArray, null, parentId);
+		jsonArray(list);
 		return "select";
 	}
 
