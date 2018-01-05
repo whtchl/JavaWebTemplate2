@@ -96,6 +96,7 @@ public class LoginAction extends BaseAction<TSysUser> {
 	
 	@Action(value = "login", results={@Result(name="login",location="/login.jsp")})
 	public String toLogin(){
+		this.session.invalidate();
 		return "login";
 	}
 	

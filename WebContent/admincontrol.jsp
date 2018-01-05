@@ -69,6 +69,15 @@
 		 $("#timeInfo").html(new Date().toLocaleString()+'  星期'+'日一二三四五六'.charAt(new Date().getDay()));
       }
    	
+		function exit() {
+			window.location.href = "/JavaWebTemplate2/login/login.action";
+		}
+		
+	  	function openDiv(){
+	   		$('#LoginUPdateDiv').dialog({
+	   			closed:false
+	   		});
+	   	}
 	</script>
 	
 	
@@ -109,7 +118,7 @@
 	   </div>
 	    
 		<div data-options="region:'south',border:false" style="height:50px;background:#E6EEF8;padding:10px;text-align: center;color: #0F61DC;">
-			<p style="margin-top: -2px;"> 预  付  保   管  理  系  统  </p>
+			<p style="margin-top: -2px;"> 后  台  管  理  系  统  </p>
 		</div>
 		
 		<div data-options="region:'center',iconCls:'icon-ok'" style=" background-image: url('jquery-easyui-1.3.2/themes/default/images/top.jpg');"  id="mainCenter">
