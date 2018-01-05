@@ -32,17 +32,6 @@ public class TSysMenuAction extends BaseAction<TSysMenu>{
 	@Autowired
 	@Qualifier("TSysMenuSerForFilter")
 	private TSysMenuService TSysMenuSer;
-	@Action(value = "selectPage", results = {@Result(name = "selectPage", location = "/pages/TSysMenu/list.jsp") })
-	public String seletePage(){
-
-		//接受前台参数，并进行数据查询
-		PageView pageView = TSysMenuSer.selectPage(this.pageParam("page", "rows","order", "sort",model ));
-
-		//返回数据到界面
-		this.returnPageInfo(pageView);
-
-		return "selectPage";
-	}
 
 	@Action(value = "select", results = {@Result(name = "select", location = "/pages/TSysMenu/list.jsp") })///pages/TSysMenu/list.jsp
 	public String select(){
@@ -78,6 +67,22 @@ public class TSysMenuAction extends BaseAction<TSysMenu>{
 
 		this.returnU_D_S_info(TSysMenuSer.update(model));
 		return "update";
+	}
+	
+	@Action(value = "allMenu", results = { @org.apache.struts2.convention.annotation.Result(name = "allMenu", location = "/pages/TSysMenu/list.jsp") })
+	public String allMenu() {
+		List list = this.TSysMenuSer.allMenu();
+		jsonArray(list);
+
+		return "allMenu";
+	}
+	
+	@Action(value = "selectPage", results = { @org.apache.struts2.convention.annotation.Result(name = "selectPage", location = "/pages/TSysMenu/list.jsp") })
+	public String seletePage() {
+		String idArray = getParameter("idArray");
+		jsonArray(this.TSysMenuSer.selectPage(idArray));
+
+		return "selectPage";
 	}
 
 }

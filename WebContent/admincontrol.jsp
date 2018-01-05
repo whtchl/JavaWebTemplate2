@@ -22,7 +22,7 @@
 			}
 		}); */
 	 
-	         setInterval("getCurrentTime()", "1000");//获得系统时间
+	    setInterval("getCurrentTime()", "1000");//获得系统时间
 		$('#menu ul').tree(
 					{
 						onClick : function(node) {

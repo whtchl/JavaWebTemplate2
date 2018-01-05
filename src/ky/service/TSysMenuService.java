@@ -20,12 +20,13 @@ import ky.util.PageView;
 @Service
 public interface TSysMenuService{
 
-	public PageView selectPage(PageView pageView) ;
+	public abstract List selectPage(String paramString);
 	public List<TSysMenu> selectList(TSysMenu obj);
 	public int save(TSysMenu obj);
 	public int delete(String idArray);
 	public int update(TSysMenu obj);
-	 public abstract List getchildMenu(int paramInt);
-	 public abstract List<TSysMenu> selectList(String paramString1, String paramString2, String paramString3);
+	public abstract List getchildMenu(int paramInt);
+	public abstract List<TSysMenu> selectList(String paramString1, String paramString2, String paramString3);
+	public abstract List allMenu();
 }
 

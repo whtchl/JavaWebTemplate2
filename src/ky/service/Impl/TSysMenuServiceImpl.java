@@ -45,10 +45,29 @@ public class TSysMenuServiceImpl extends BaseServiceImpl implements TSysMenuServ
 		return list;
 	}
 	
-	public PageView selectPage(PageView pageView) {
-		return tsysmenuDao.getPageView(pageView);
-	}
+	public List selectPage(String idArray) {
+		List list = new ArrayList();
 
+		TSysMenu obj = (TSysMenu) selectList(idArray, null, null).get(0);
+		List twoList = this.tsysmenuDao.menuLevelGroup();
+		List threeList = new ArrayList();
+
+		for (int i = 0; i < twoList.size() - 1; i++) {
+			List childThreeList = new ArrayList();
+			List objList = selectList(null, twoList.get(i).toString(), null);
+			for (int z = 0; z < objList.size(); z++) {
+				childThreeList.add(objList.get(z));
+			}
+			threeList.add(childThreeList);
+		}
+		list.add(obj);
+		list.add(twoList);
+		list.add(threeList);
+
+		return list;
+	}
+	
+	
 	public List<TSysMenu> selectList(TSysMenu obj) {
 		return tsysmenuDao.selectList(obj);
 	}
@@ -171,8 +190,81 @@ public class TSysMenuServiceImpl extends BaseServiceImpl implements TSysMenuServ
 		return firstlist;
 	}
 	
+	public List allMenu() {
+		List list = new ArrayList();
 
+		List oneList = OneTree();
+		for (int i = 0; i < oneList.size(); i++) {
+			TSysMenu jm = (TSysMenu) oneList.get(i);
+			Map oneMap = new HashMap();
+			oneMap.put("id", jm.getMenuId());
+			oneMap.put("text", jm.getMenuName());
+			oneMap.put("children", childMenu(jm.getMenuId() + ""));
+			oneMap.put("state", "closed");
+			list.add(oneMap);
+		}
+		return list;
+	}
 	
+	public List<TSysMenu> OneTree() {
+		TSysMenu menu = new TSysMenu();
+		menu.setMenuLevel(Integer.valueOf(1));
+		menu.setPlatformId(Integer.valueOf(1));
+		return this.tsysmenuDao.selectList(menu);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List childMenu(String id) {
+		List list = new ArrayList();
 
+		TSysMenu twojm = new TSysMenu();
+		twojm.setParentid(Integer.valueOf(Integer.parseInt(id)));
+
+		List twoMenu = this.tsysmenuDao.selectList(twojm);
+		if (twoMenu.size() > 0) {
+			for (int i = 0; i < twoMenu.size(); i++) {
+				Map twoMap = new HashMap();
+				twoMap.put("id", ((TSysMenu) twoMenu.get(i)).getMenuId());
+				twoMap.put("text", ((TSysMenu) twoMenu.get(i)).getMenuName());
+				TSysMenu threejm = new TSysMenu();
+				threejm.setParentid(((TSysMenu) twoMenu.get(i)).getMenuId());
+				List threeMenu = this.tsysmenuDao.selectList(threejm);
+				List threeList = new ArrayList();
+				if (threeMenu.size() > 0) {
+					for (int z = 0; z < threeMenu.size(); z++) {
+						Map threeMap = new HashMap();
+						threeMap.put("id", ((TSysMenu) threeMenu.get(z))
+								.getMenuId());
+						threeMap.put("text", ((TSysMenu) threeMenu.get(z))
+								.getMenuName());
+						threeList.add(threeMap);
+
+						TSysMenu fourjm = new TSysMenu();
+						fourjm.setParentid(((TSysMenu) threeMenu.get(z))
+								.getMenuId());
+
+						List fourMenu = this.tsysmenuDao.selectList(fourjm);
+						List fourList = new ArrayList();
+						if (fourMenu.size() > 0) {
+							for (int k = 0; k < fourMenu.size(); k++) {
+								Map fourMap = new HashMap();
+								fourMap.put("id", ((TSysMenu) fourMenu.get(k))
+										.getMenuId());
+								fourMap.put("text",
+										((TSysMenu) fourMenu.get(k))
+												.getMenuName());
+								fourList.add(fourMap);
+							}
+						}
+						threeMap.put("children", fourList);
+					}
+				}
+				twoMap.put("children", threeList);
+				list.add(twoMap);
+			}
+		}
+
+		return list;
+	}
 }
 

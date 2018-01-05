@@ -86,6 +86,7 @@ import net.sf.json.JSONObject;
      try {
        this.response.setContentType("text/html;charset=utf-8");
        JSONArray json = JSONArray.fromObject(list);
+       System.out.println("jsonarray:"+json);
        this.response.setCharacterEncoding("utf-8");
        PrintWriter out = this.response.getWriter();
        this.response.setContentType("text/html");

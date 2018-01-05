@@ -22,5 +22,9 @@ import ky.util.PageView;
 	public List<TSysMenu> selectList1(TSysMenu tsm) {
 		return this.session.selectList(getPath("selectList1"),tsm);
 	}
+	
+	public List<Integer> menuLevelGroup() {
+		return this.session.selectList(getPath("menuLevelGroup"));
+	}
 }
 
