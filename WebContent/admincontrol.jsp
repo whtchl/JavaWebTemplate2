@@ -23,17 +23,20 @@
 		}); */
 	 
 	         setInterval("getCurrentTime()", "1000");//获得系统时间
-		/* 	 $('#menu ul').tree({
-			    onClick: function(node){
-			          temp=node;
-			          if($('#menu ul').tree('isLeaf',temp.target)){
-			             //最内层的菜单点击事件时,在主页面中加载tab
-			              $.post("/lf_pms/tsysmenu/select.action?idArray="+node.id,function(data){
-			                   addTab(data[0].menuName,data[0].menuHref);
-			              },'json')
-	                  } 
-			    }
-			}); */
+		$('#menu ul').tree(
+					{
+						onClick : function(node) {
+							temp = node;
+							if ($('#menu ul').tree('isLeaf', temp.target)) {
+								//最内层的菜单点击事件时,在主页面中加载tab
+								$.post("/JavaWebTemplate2/tsysmenu/select.action?idArray="
+												+ node.id, function(data) {
+											addTab(data[0].menuName,
+													data[0].menuHref);
+										}, 'json')
+							}
+						}
+					});
 			 <%--
 			$("#updateDiv").window({
 				onBeforeClose :function(){
@@ -60,10 +63,20 @@
 				}
 			});
 			--%>
-			//addTabFr();
+			addTabFr();
 // 			loadnotice();
 	    })  
 	    
+
+		//验证session是否失效
+		function checkuser() {
+			$.post("/JavaWebTemplate2/login/checkUser.action", function(data) {
+				if (data == 0) {
+					alert("由于您长时间未进行操作，为了保障您的数据安全，系统将为您自动跳转到登录页面，请重新登录！");
+					window.location = "/JavaWebTemplate2/login/login.action";
+				}
+			}, "json");
+		}
    		  //获得系统时间
      function getCurrentTime() {
 		 $("#timeInfo").html(new Date().toLocaleString()+'  星期'+'日一二三四五六'.charAt(new Date().getDay()));

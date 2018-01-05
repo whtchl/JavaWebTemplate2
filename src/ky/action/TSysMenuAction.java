@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 @Namespace("/tsysmenu")
 public class TSysMenuAction extends BaseAction<TSysMenu>{
 
-	@Autowired()
+	@Autowired
 	private TSysMenuService TSysMenuSer;
 	@Action(value = "selectPage", results = {@Result(name = "selectPage", location = "/pages/TSysMenu/list.jsp") })
 	public String seletePage(){
@@ -41,11 +41,17 @@ public class TSysMenuAction extends BaseAction<TSysMenu>{
 		return "selectPage";
 	}
 
-	@Action(value = "select", results = {@Result(name = "select", location = "/pages/TSysMenu/list.jsp") })
-	public String selete(){
+	@Action(value = "select", results = {@Result(name = "select", location = "/index.jsp") })///pages/TSysMenu/list.jsp
+	public String select(){
 
-		List<TSysMenu> list = TSysMenuSer.selectList(model);
-		this.jsonArray(list);
+		//List<TSysMenu> list = TSysMenuSer.selectList(model);
+		//this.jsonArray(list);
+		System.out.println("test");
+		String idArray = getParameter("idArray");
+		String parentId = getParameter("parentId");
+		System.out.println("idArray:"+idArray+" parentId:"+parentId);
+		/*List list = this.TSysMenuSer.selectList(idArray, null, parentId);
+		jsonArray(list);*/
 		return "select";
 	}
 

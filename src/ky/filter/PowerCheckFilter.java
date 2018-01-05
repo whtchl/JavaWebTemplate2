@@ -41,7 +41,6 @@ public class PowerCheckFilter implements Filter {
 				reponse.sendRedirect(request.getContextPath());
 			}
 		}
-		
 		chain.doFilter(arg0, arg1);
 	}
 
