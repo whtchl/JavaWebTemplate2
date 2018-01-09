@@ -1,12 +1,20 @@
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
-<%@ include file="/WEB-INF/common/commons.jspf" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd"> 
 <HTML xmlns="http://www.w3.org/1999/xhtml"> 
 	<HEAD>  
 	    <meta charset="UTF-8">  
 		<title>后台菜单</title>  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/default/easyui.css">  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/icon.css">  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/demo.css">  
+		<link rel="stylesheet" type="text/css" href="../../css/main.css">   
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>  
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/locale/easyui-lang-zh_CN.js"></script>  
+		<script type="text/javascript" src="../../js/config.js" ></script>     
 	</HEAD>     
 	<script type="text/javascript">
 		$(function () {
@@ -32,16 +40,14 @@
 			   <thead>   
 			          <tr>   
 	                        <th data-options="field:'ck',checkbox:true"></th>
-				            <th data-options="field:'userStatus',sortable:true" width="20">userStatus</th> 
-				            <th data-options="field:'loginName',sortable:true" width="20">loginName</th> 
-				            <th data-options="field:'trueName',sortable:true" width="20">trueName</th> 
-				            <th data-options="field:'roleId',sortable:true" width="20">roleId</th> 
-				            <th data-options="field:'departmentId',sortable:true" width="20">departmentId</th> 
-				            <th data-options="field:'pwdDate',sortable:true" width="20">pwdDate</th> 
-				            <th data-options="field:'id',sortable:true" width="20">id</th> 
-				            <th data-options="field:'mobileno',sortable:true" width="20">mobileno</th> 
-				            <th data-options="field:'loginPwd',sortable:true" width="20">loginPwd</th> 
-				            <th data-options="field:'email',sortable:true" width="20">email</th> 
+				            <th data-options="field:'id',sortable:true" width="20">编号</th> 
+				             <th data-options="field:'loginName',sortable:true" width="20">登录名</th> 
+				             <th data-options="field:'trueName',sortable:true" width="20">真实姓名</th> 
+				            <th data-options="field:'roleName',sortable:true" width="20">角色名称</th>
+				            <th data-options="field:'departmentName',sortable:true" width="20">部门名称</th>  
+				            <th data-options="field:'email',sortable:true" width="20">电子邮件</th> 				           				     
+				            <th data-options="field:'userStatus',sortable:true,formatter:function(userStatus){if(userStatus=='0'){return '开通';}if(userStatus=='1'){return '无效';}}"  width="20">用户状态</th> 				            
+				            <th data-options="field:'mobileno',sortable:true" width="20">手机号</th> 
 			          </tr>   
 			   </thead>   
 	     </table>   
@@ -52,13 +58,13 @@
 	               <div  class="formDiv">
 	         			<ul >
 	         			 	<li>
-	      						字段：<INPUT class=textfield size=18  name="" >  
+	      						编号：<INPUT class=textfield size=18  name="id" >  
 	     		     	 	</li> 
 	     				  	<li >
-	     		     			字段：<INPUT class=textfield size=18  name="" > 
+	     		     			姓名：<INPUT class=textfield size=18  name="trueName" > 
 	     		     	  	</li>
 			     		  	<li >
-			     			         字段：<INPUT class=textfield size=18  name="" > 
+			     			         登录名：<INPUT class=textfield size=18  name="loginName" > 
 			     		  	</li>
 			     			<li>
 			     			      <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" href="javascript:void(0)"  onclick="FormData('TSysUserTab','TSysUserSearchForm')">查询</a>
