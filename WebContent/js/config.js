@@ -204,6 +204,7 @@ function doReset(formName){
 }
 
 function updateOpen(tableName,updateDivName,iframeName,pkName){
+
     var rows=$("#"+tableName+"").datagrid("getSelections");
     if(rows.length<1){
 		$.messager.alert('信息提示','请选择修改信息!!!','error'); 
@@ -211,7 +212,7 @@ function updateOpen(tableName,updateDivName,iframeName,pkName){
 		$.messager.alert('信息提示','只能选择一条修改信息','error'); 
 	}else{
 		  var row=rows[0];//获取类表中的选中的列
-	      $("#"+updateDivName+"").dialog('open');
+	      $("#"+updateDivName+"").dialog('open');  
 	      if(iframeName=="PospProfitInfoUpdateIframe"){
 	    	  $("#"+iframeName+"")[0].src="updateProfit.jsp?sellerId="+ row_info(row,"sellerNo")+"";
 	      }else if(iframeName=="PmsProfitInfoUPdateIframe"){

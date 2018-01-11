@@ -1,7 +1,6 @@
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd"> 
 <HTML xmlns="http://www.w3.org/1999/xhtml"> 
 	<HEAD>  
@@ -18,25 +17,52 @@
 	</HEAD>     
 	<script type="text/javascript">
 		$(function () {
-			//关闭修改界面时,刷新列表
-			$("#TSysUserUpdateDiv").window({
-	       		onBeforeClose: function () { //当面板关闭之前触发的事件
-	         		 $('#TSysUserTab').datagrid('load');  
-	                 $("#update_msg").html("&nbsp;");
-	       		}
-	 		});
+		
 			//关闭添加界面时,刷新列表
 			$('#TSysUserSaveDiv').window({
 	      		 onBeforeClose: function () { //当面板关闭之前触发的事件
-	         		 $('#TSysUserTab').datagrid('load');  
+	         		 $('#TSysUserTab').datagrid('reload');  
 	                 $("#add_msg").html("&nbsp;");
 			     }
 		    });
+		    
+		    //关闭修改界面时,刷新列表
+			$('#TSysUserUPdateDiv').window({
+	      		 onBeforeClose: function () { //当面板关闭之前触发的事件
+	         		 $('#TSysUserTab').datagrid('reload');  
+	              	
+			     }
+		    });
 	    });
+		
+		function resetPassword(tableName,pkName){
+			var rows=$("#"+tableName+"").datagrid("getSelections");
+		    var row=rows[0].roleId;
+		    if(rows.length<1){
+				$.messager.alert('信息提示','请选择编辑信息!','error'); 
+			}else if(rows.length>1){
+				$.messager.alert('信息提示','只能选择一条编辑信息!','error'); 
+			}else if(row==1){
+				$.messager.alert('信息提示','管理员不能操作!','error'); 
+			}else{
+				  var row=rows[0];//获取类表中的选中的列
+				  var id = row_info(row,pkName);
+				  $.post("../../tsysuser/resetPassword.action?id=" + row_info(row, pkName), function(data) {
+						if (data == '[1]') {
+							$.messager.alert('信息提示','重置成功','suc');
+						}else{
+							$.messager.alert('信息提示','重置失败,请联系管理员!','error');
+						}
+						$('#TSysUserTab').datagrid('load');  
+					});
+			} 
+			
+		}
+		
 	</script>  
 	<BODY>   
 		<table id="TSysUserTab" class="easyui-datagrid" data-options="url:'../../tsysuser/selectPage.action',pageList:[10,20,22,30,40] , 
-		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'id',pageSize:22" >  
+		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'id',singleSelect:false,pageSize:22" >  
 			   <thead>   
 			          <tr>   
 	                        <th data-options="field:'ck',checkbox:true"></th>
@@ -52,11 +78,12 @@
 			   </thead>   
 	     </table>   
 
-	     <!-- 搜索div,功能div -->
+	     <!-- 搜索div,功能div --> 
 	     <div id="tb">
+	     
 	          <form method="post" id="TSysUserSearchForm">
 	               <div  class="formDiv">
-	         			<ul >
+	         			<ul>
 	         			 	<li>
 	      						编号：<INPUT class=textfield size=18  name="id" >  
 	     		     	 	</li> 
@@ -73,22 +100,21 @@
 				   </div>
 	          </form>
 			<div class="operate">
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="saveOpen('TSysUserSaveDiv','TSysUserSaveIframe')">新增</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateOpen('TSysUserTab','TSysUserUpdateDiv','TSysUserUpdateIframe','id')">修改(详细)</a>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="delete_info('TSysUserTab','tsysuser','id')">删除</a>
+ 
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateOpen('TSysUserTab','TSysUserUPdateDiv','TSysUserUPdateIframe','id')">查看(详细)</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editOpen('TSysUserTab','TSysUserEditDiv','TSysUserEditIframe','id')">编辑权限</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="resetPassword('TSysUserTab','id')">重置密码</a>
 			</div>
 	   </div>
 
-	    <!-- 添加界面 -->
-	    <div id="TSysUserSaveDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-add" title="添加" style="width:530px;height:350px;text-align: center;">
-			<iframe scrolling="auto" id="TSysUserSaveIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
-	   </div>
-
 	    <!-- 修改界面 -->
-	    <div id="TSysUserUpdateDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-edit" title="修改" style="width:530px;height:350px;text-align: center;">
-			<iframe scrolling="auto" id="TSysUserUpdateIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
+	    <div id="TSysUserUPdateDiv" class="easyui-window" closed="true" modal="true" iconCls="icon-edit" title="查看" style="width:400px;height:350px;text-align: center;">
+			<iframe scrolling="auto" id="TSysUserUPdateIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
 	   </div>
-
+		<!-- 编辑权限界面 -->
+	    <div id="TSysUserEditDiv" class="easyui-window" closed="true" modal="true" iconCls="icon-edit" title="编辑权限" style="width:336px;height:400px;text-align: center;">
+			<iframe scrolling="auto" id="TSysUserEditIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
+	   </div>
 	</BODY>
 </html>
 
