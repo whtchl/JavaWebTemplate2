@@ -1,15 +1,26 @@
 
 package ky.service.Impl;
 
-import ky.entity.TSysUser;
-import ky.dao.TSysUserDao;
-import ky.service.TSysUserService;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ky.dao.PmsDepartmentDao;
+import ky.dao.TSysRoleDao;
+import ky.dao.TSysUserDao;
+import ky.entity.PmsDepartment;
+import ky.entity.TSysRole;
+import ky.entity.TSysUser;
+import ky.service.TSysUserService;
+import ky.util.DateFormat;
 import ky.util.Encryption;
 import ky.util.PageView;
 
@@ -26,6 +37,12 @@ public class TSysUserServiceImpl extends BaseServiceImpl implements TSysUserServ
 
 	@Autowired
 	private TSysUserDao tsysuserDao;
+	
+	@Autowired
+	private TSysRoleDao tsysroleDao;
+	
+	@Autowired
+	private PmsDepartmentDao pmsdepartmentDao;
 
 	public PageView selectPage(PageView pageView) {
 		return tsysuserDao.getPageView(pageView);
@@ -77,6 +94,57 @@ public class TSysUserServiceImpl extends BaseServiceImpl implements TSysUserServ
 		}
 		
 		return param;
+	}
+	
+	//查询在线用户的信息
+	public List<Map<String, String>> selectOnlineUser(Map<String, HttpSession> map) {
+		List<Map<String,String>> list=new ArrayList<Map<String,String>>();
+		Iterator<String> it = map.keySet().iterator();
+			while(it.hasNext()){
+				HttpSession se = map.get(it.next());
+				 Object obj = se.getAttribute("user");
+				if(obj==null){
+					continue;//当用户未登录时，跳过
+				}
+				TSysUser user = (TSysUser)obj;
+				Map<String, String> m=new HashMap<String, String>();
+				m.put("loginName", user.getLoginName());
+				m.put("trueName", user.getTrueName());
+				TSysRole role=new TSysRole();
+				role.setRoleId(user.getRoleId());
+				List<TSysRole> roleList = tsysroleDao.selectList(role);
+				if(roleList.size()==1){
+					role=roleList.get(0);
+				}
+				String roleName=role.getRoleName();
+				m.put("roleName", roleName);
+				if(user.getDepartmentId()!=null){
+					PmsDepartment dep=new PmsDepartment();
+					dep.setDepartmentNum(user.getDepartmentId());
+					List<PmsDepartment> depList = pmsdepartmentDao.selectList(dep);
+					if(depList.size()==1){
+						dep=depList.get(0);
+					}
+					m.put("depName", dep.getDepartmentName());
+					m.put("agentName", "");//当有部门id存在时，必定属于总后台或总，所属代理商为空
+					if(dep.getOemNumber().equals("1")){
+						m.put("oemName", "");
+					}else{
+						
+					}
+				}else {
+					m.put("depName", "");
+					if(roleName.equals("销售员")){
+						
+					}else if(roleName.equals("一级代理")||roleName.equals("二级代理")||roleName.equals("三级代理")){
+						
+					}
+					
+				}
+				m.put("loginTime", DateFormat.getString(new Date(se.getCreationTime())));
+				list.add(m);
+			}
+		return list;
 	}
 }
 

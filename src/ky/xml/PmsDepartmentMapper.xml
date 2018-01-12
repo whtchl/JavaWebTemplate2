@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.PmsDepartmentMapper'>
+
+	<resultMap type="ky.entity.PmsDepartment" id="resultMap">
+	    <id column="id" property="id" />
+		<result column="oem_number" property="oemNumber" />
+		<result column="department_name" property="departmentName" />
+		
+		<result column="department_num" property="departmentNum" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.oemNumber !=null  and  searchBean.oemNumber!=''">
+							and obj.oem_number=#{searchBean.oemNumber}
+						</if>
+					<if test="searchBean.departmentName !=null  and  searchBean.departmentName!=''">
+							and obj.department_name=#{searchBean.departmentName}
+						</if>
+					<if test="searchBean.id !=null  and  searchBean.id!=0">
+							and obj.id=#{searchBean.id}
+						</if>
+					<if test="searchBean.departmentNum !=null  and  searchBean.departmentNum!=''">
+							and obj.department_num=#{searchBean.departmentNum}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM PMS_DEPARTMENT obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.PmsDepartment">
+		select * from PMS_DEPARTMENT
+		<where>
+				<if test="oemNumber !=null  and  oemNumber!=''">
+				and oem_number=#{oemNumber}
+			</if>
+				<if test="departmentName !=null  and  departmentName!=''">
+				and department_name=#{departmentName}
+			</if>
+				<if test="id !=null  and  id!=0">
+				and id=#{id}
+			</if>
+				<if test="departmentNum !=null  and  departmentNum!=''">
+				and department_num=#{departmentNum}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.PmsDepartment">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into PMS_DEPARTMENT(oem_number,department_name,department_num)
+		values(#{oemNumber,jdbcType=VARCHAR},#{departmentName,jdbcType=VARCHAR},#{departmentNum,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from PMS_DEPARTMENT
+		where id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.PmsDepartment'>
+		update PMS_DEPARTMENT set
+		oem_number = #{oemNumber,jdbcType=VARCHAR},
+		department_name = #{departmentName,jdbcType=VARCHAR},
+		id = #{id,jdbcType=INTEGER},
+		department_num = #{departmentNum,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from PMS_DEPARTMENT obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+

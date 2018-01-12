@@ -1,36 +1,30 @@
 
 package ky.service;
 
-import ky.entity.TSysUser;
+import ky.entity.PmsDepartment;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ky.util.PageView;
 
 /**
 * ********************************************************
-* @ClassName: TSysUserService
+* @ClassName: PmsDepartmentService
 * @Description: ???
 * @author 生成service类
-* @date 2017-12-21 下午 01:59:42 
+* @date 2018-01-12 下午 03:56:01 
 *******************************************************
 */
 @Service
-public interface TSysUserService{
+public interface PmsDepartmentService{
 
 	public PageView selectPage(PageView pageView) ;
-	public List<TSysUser> selectList(TSysUser obj);
-	public int save(TSysUser obj);
+	public List<PmsDepartment> selectList(PmsDepartment obj);
+	public int save(PmsDepartment obj);
 	public int delete(String idArray);
-	public int update(TSysUser obj);
-	public abstract int resetPassword(String idArray);
-	
-	public List<Map<String,String>> selectOnlineUser(Map<String,HttpSession> map);
+	public int update(PmsDepartment obj);
 
 }
 

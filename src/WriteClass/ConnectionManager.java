@@ -9,7 +9,7 @@ public class ConnectionManager
 {
   public static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
 //  public static final String URL = "jdbc:oracle:thin:@10.1.1.253:1521:orcl";
-  public static final String URL = "jdbc:oracle:thin:@192.168.18.108:1521:huiyuan";
+  public static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:huiyuan";
   public static final String UID = "huiyuan";
   public static final String PWD = "huiyuan123";
   protected Connection conn;
