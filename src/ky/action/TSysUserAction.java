@@ -71,5 +71,10 @@ public class TSysUserAction extends BaseAction<TSysUser>{
 		return "update";
 	}
 
+	@Action(value = "resetPassword")
+	public void resetPassword() throws UnsupportedEncodingException {
+		String id = this.getRequest("id");
+		returnU_D_S_info(this.TSysUserSer.resetPassword(id));
+	}
 }
 

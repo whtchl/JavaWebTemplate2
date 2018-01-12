@@ -28,5 +28,13 @@ public interface TSysMenuService{
 	public abstract List getchildMenu(int paramInt);
 	public abstract List<TSysMenu> selectList(String paramString1, String paramString2, String paramString3);
 	public abstract List allMenu();
+	  public abstract List childMenu2(String id,List<TSysMenu> mlist);
+	  public List selectList1(TSysMenu paramTSysMenu);
+
+	  public abstract List<TSysMenu> getMenus(TSysMenu paramTSysMenu);
+
+	  public abstract List allMenu1(List<TSysMenu> paramList);
+
+	  public abstract List allMenu2(List<TSysMenu> paramList,int pId);
 }
 

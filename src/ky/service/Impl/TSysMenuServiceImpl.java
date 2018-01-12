@@ -266,5 +266,143 @@ public class TSysMenuServiceImpl extends BaseServiceImpl implements TSysMenuServ
 
 		return list;
 	}
+	
+	public List selectList1(TSysMenu obj) {
+		return tsysmenuDao.selectList1(obj);
+	}
+
+	@Override
+	public List childMenu2(String id, List<TSysMenu> mlist) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public List allMenu2(List<TSysMenu> mlist,int pId) {
+		List list = new ArrayList();
+		TSysMenu m = new TSysMenu();
+		m.setPlatformId(pId);
+		List<TSysMenu> tumList = tsysmenuDao.selectList(m);
+		List<TSysMenu> firstlist=new ArrayList<TSysMenu>();
+		List<TSysMenu> secondlist=new ArrayList<TSysMenu>();
+		List<TSysMenu> thirdlist=new ArrayList<TSysMenu>();
+		List<TSysMenu> fourthlist=new ArrayList<TSysMenu>();
+		for (int i = 0; i < tumList.size(); i++) {
+			TSysMenu sm=tumList.get(i);
+			int level=sm.getMenuLevel();
+			if(level==1){
+				firstlist.add(sm);
+			}else if(level==2){
+				secondlist.add(sm);
+			}else if(level==3){
+				thirdlist.add(sm);
+			}else if(level==4){
+				fourthlist.add(sm);
+			}
+		}
+		Map<String, List<TSysMenu>> menumap=new HashMap<String, List<TSysMenu>>();
+		menumap.put("first", firstlist);
+		menumap.put("second", secondlist);
+		menumap.put("third", thirdlist);
+		menumap.put("fourth", fourthlist);
+		for (int i = 0; i < firstlist.size(); i++) {
+			TSysMenu jm = (TSysMenu) firstlist.get(i);
+			Map oneMap = new HashMap();
+			oneMap.put("id", jm.getMenuId());
+			oneMap.put("text", jm.getMenuName());
+			oneMap.put("state", "closed");
+			oneMap.put("children", childMenu1(jm.getMenuId(),menumap, mlist));
+			list.add(oneMap);
+		}
+		return list;
+	}
+	public List childMenu1(Integer menuId,Map<String, List<TSysMenu>> menumap, List<TSysMenu> mlist) {
+		List list = new ArrayList();
+		List<TSysMenu> twoMenu = menumap.get("second");
+		if (twoMenu.size() > 0) {
+			for (int i = 0; i < twoMenu.size(); i++) {
+				if(twoMenu.get(i).getParentid().intValue()==menuId.intValue()){
+					Map twoMap = new HashMap();
+					twoMap.put("id", ((TSysMenu) twoMenu.get(i)).getMenuId());
+					twoMap.put("text", ((TSysMenu) twoMenu.get(i)).getMenuName());
+					for (int j = 0; j < mlist.size(); j++) {
+						if (((TSysMenu) mlist.get(j)).getMenuId().equals(
+								((TSysMenu) twoMenu.get(i)).getMenuId())) {
+							twoMap.put("checked", "true");
+						}
+					}
+					List<TSysMenu> threeMenu = menumap.get("third");
+					List threeList = new ArrayList();
+					if (threeMenu.size() > 0) {
+						for (int z = 0; z < threeMenu.size(); z++) {
+							if(threeMenu.get(z).getParentid().intValue()==twoMenu.get(i).getMenuId()){
+								Map threeMap = new HashMap();
+								threeMap.put("id", ((TSysMenu) threeMenu.get(z))
+										.getMenuId());
+								threeMap.put("text", ((TSysMenu) threeMenu.get(z))
+										.getMenuName());
+								for (int j = 0; j < mlist.size(); j++) {
+									if (((TSysMenu) mlist.get(j)).getMenuId().equals(
+											((TSysMenu) threeMenu.get(z)).getMenuId())) {
+										threeMap.put("checked", "true");
+									}
+								}
+								threeList.add(threeMap);
+								
+								List<TSysMenu> fourMenu = menumap.get("fourth");
+								List fourList = new ArrayList();
+								if (fourMenu.size() > 0) {
+									for (int k = 0; k < fourMenu.size(); k++) {
+										if(fourMenu.get(k).getParentid()==threeMenu.get(z).getMenuId()){
+										Map fourMap = new HashMap();
+										fourMap.put("id", ((TSysMenu) fourMenu.get(k))
+												.getMenuId());
+										fourMap.put("text",
+												((TSysMenu) fourMenu.get(k))
+														.getMenuName());
+										for (int j = 0; j < mlist.size(); j++) {
+											if (((TSysMenu) mlist.get(j))
+													.getMenuId()
+													.equals(
+															((TSysMenu) fourMenu.get(k))
+																	.getMenuId())) {
+												fourMap.put("checked", "true");
+											}
+										}
+										fourList.add(fourMap);
+									}
+									}
+								}
+								threeMap.put("children", fourList);
+							}
+						}
+					}
+					twoMap.put("children", threeList);
+					list.add(twoMap);
+				}
+			}
+		}
+
+		return list;
+	}
+	
+	public List<TSysMenu> getMenus(TSysMenu obj) {
+		List list = this.tsysmenuDao.selectList(obj);
+		return list;
+	}
+
+	public List allMenu1(List<TSysMenu> mlist) {
+		List list = new ArrayList();
+
+		List oneList = OneTree();
+		for (int i = 0; i < oneList.size(); i++) {
+			TSysMenu jm = (TSysMenu) oneList.get(i);
+			Map oneMap = new HashMap();
+			oneMap.put("id", jm.getMenuId());
+			oneMap.put("text", jm.getMenuName());
+			oneMap.put("state", "closed");
+			oneMap.put("children", childMenu2(jm.getMenuId() + "",mlist));
+			list.add(oneMap);
+		}
+		return list;
+	}
 }
 

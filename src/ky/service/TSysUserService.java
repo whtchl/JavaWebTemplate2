@@ -25,6 +25,7 @@ public interface TSysUserService{
 	public int save(TSysUser obj);
 	public int delete(String idArray);
 	public int update(TSysUser obj);
+	public abstract int resetPassword(String idArray);
 
 }
 

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ky.util.Encryption;
 import ky.util.PageView;
 
 /**
@@ -61,5 +63,20 @@ public class TSysUserServiceImpl extends BaseServiceImpl implements TSysUserServ
 		return param;
 	}
 
+	
+	public int resetPassword(String id) {
+		int param = 0;
+		TSysUser tSysUser = new TSysUser();
+		tSysUser.setId(Integer.parseInt(id));
+		List<TSysUser> list = tsysuserDao.selectList(tSysUser);
+		for (int i = 0; i < list.size(); i++) {
+			tSysUser = list.get(0);
+			tSysUser.setLoginPwd(Encryption.MD5("123456"));
+			
+			param = this.tsysuserDao.update(tSysUser);
+		}
+		
+		return param;
+	}
 }
 
