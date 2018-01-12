@@ -1,12 +1,19 @@
 
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
-<%@ include file="/WEB-INF/common/commons.jspf" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd"> 
 <HTML xmlns="http://www.w3.org/1999/xhtml"> 
 	<HEAD>  
 	    <meta charset="UTF-8">  
 		<title>后台菜单</title>  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/default/easyui.css">  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/icon.css">  
+		<link rel="stylesheet" type="text/css" href="../../jquery-easyui-1.3.2/themes/demo.css">  
+		<link rel="stylesheet" type="text/css" href="../../css/main.css">   
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>  
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../../jquery-easyui-1.3.2/locale/easyui-lang-zh_CN.js"></script>  
+		<script type="text/javascript" src="../../js/config.js" ></script>     
 	</HEAD>     
 	<script type="text/javascript">
 		$(function () {
@@ -28,15 +35,15 @@
 	</script>  
 	<BODY>   
 		<table id="TSysRoleTab" class="easyui-datagrid" data-options="url:'../../tsysrole/selectPage.action',pageList:[10,20,22,30,40] , 
-		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'roleId',pageSize:22" >  
-			   <thead>   
-			          <tr>   
-	                        <th data-options="field:'ck',checkbox:true"></th>
-				            <th data-options="field:'roleName',sortable:true" width="20">roleName</th> 
-				            <th data-options="field:'roleId',sortable:true" width="20">roleId</th> 
-				            <th data-options="field:'levels',sortable:true" width="20">levels</th> 
-			          </tr>   
-			   </thead>   
+		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'roleId',singleSelect:false,pageSize:22" >  
+			   <thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options="field:'roleId',sortable:true" width="20">角色编号</th>
+				<th data-options="field:'levels',sortable:true" width="20">角色等级</th>
+				<th data-options="field:'roleName',sortable:true" width="20">角色名称</th>
+			</tr>
+		</thead>   
 	     </table>   
 
 	     <!-- 搜索div,功能div -->
@@ -45,14 +52,12 @@
 	               <div  class="formDiv">
 	         			<ul >
 	         			 	<li>
-	      						字段：<INPUT class=textfield size=18  name="" >  
+	      						角色编号：<INPUT class=textfield size=18  name="roleId" >  
 	     		     	 	</li> 
 	     				  	<li >
-	     		     			字段：<INPUT class=textfield size=18  name="" > 
+	     		     			角色名称：<INPUT class=textfield size=18  name="roleName" > 
 	     		     	  	</li>
-			     		  	<li >
-			     			         字段：<INPUT class=textfield size=18  name="" > 
-			     		  	</li>
+			     		
 			     			<li>
 			     			      <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" href="javascript:void(0)"  onclick="FormData('TSysRoleTab','TSysRoleSearchForm')">查询</a>
 			     			</li>
@@ -67,12 +72,12 @@
 	   </div>
 
 	    <!-- 添加界面 -->
-	    <div id="TSysRoleSaveDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-add" title="添加" style="width:530px;height:350px;text-align: center;">
+	    <div id="TSysRoleSaveDiv" class="easyui-window" closed="true"  modal="true" iconCls="icon-add" title="添加" style="width:530px;height:350px;text-align: center;">
 			<iframe scrolling="auto" id="TSysRoleSaveIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
 	   </div>
 
 	    <!-- 修改界面 -->
-	    <div id="TSysRoleUpdateDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-edit" title="修改" style="width:530px;height:350px;text-align: center;">
+	    <div id="TSysRoleUpdateDiv" class="easyui-window" closed="true" modal="true" iconCls="icon-edit" title="修改" style="width:530px;height:350px;text-align: center;">
 			<iframe scrolling="auto" id="TSysRoleUpdateIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
 	   </div>
 

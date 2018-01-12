@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.TSysUserMenuMapper'>
+
+	<resultMap type="ky.entity.TSysUserMenu" id="resultMap">
+	    <id column="sum_id" property="sumId" />
+		<result column="user_id" property="userId" />
+		<result column="menu_id" property="menuId" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.userId !=null  and  searchBean.userId!=0">
+							and obj.user_id=#{searchBean.userId}
+						</if>
+					<if test="searchBean.sumId !=null  and  searchBean.sumId!=0">
+							and obj.sum_id=#{searchBean.sumId}
+						</if>
+					<if test="searchBean.menuId !=null  and  searchBean.menuId!=0">
+							and obj.menu_id=#{searchBean.menuId}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM T_SYS_USER_MENU obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.sum_id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.TSysUserMenu">
+		select * from T_SYS_USER_MENU
+		<where>
+				<if test="userId !=null  and  userId!=0">
+				and user_id=#{userId}
+			</if>
+				<if test="sumId !=null  and  sumId!=0">
+				and sum_id=#{sumId}
+			</if>
+				<if test="menuId !=null  and  menuId!=0">
+				and menu_id=#{menuId}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.TSysUserMenu">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into T_SYS_USER_MENU(user_id,menu_id)
+		values(#{userId,jdbcType=INTEGER},#{menuId,jdbcType=INTEGER})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from T_SYS_USER_MENU
+		where sum_id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.TSysUserMenu'>
+		update T_SYS_USER_MENU set
+		user_id = #{userId,jdbcType=INTEGER},
+		sum_id = #{sumId,jdbcType=INTEGER},
+		menu_id = #{menuId,jdbcType=INTEGER}
+		where sum_id=#{sumId}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from T_SYS_USER_MENU obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+
