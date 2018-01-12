@@ -28,16 +28,17 @@
 	</script>  
 	<BODY>   
 		<table id="PmsDictionaryTab" class="easyui-datagrid" data-options="url:'../../pmsdictionary/selectPage.action',pageList:[10,20,22,30,40] , 
-		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'id',pageSize:22" >  
+		       singleSelect:true,fit:true,fitColumns:true,toolbar:'#tb',pagination:true,idField:'id',singleSelect:false,pageSize:22" >  
 			   <thead>   
 			          <tr>   
 	                        <th data-options="field:'ck',checkbox:true"></th>
-				            <th data-options="field:'description',sortable:true" width="20">description</th> 
-				            <th data-options="field:'id',sortable:true" width="20">id</th> 
-				            <th data-options="field:'type',sortable:true" width="20">type</th> 
-				            <th data-options="field:'value',sortable:true" width="20">value</th> 
-				            <th data-options="field:'key',sortable:true" width="20">key</th> 
-				            <th data-options="field:'canupdate',sortable:true" width="20">canupdate</th> 
+				            <th data-options="field:'id',sortable:true" width="20">ID</th> 
+				            <th data-options="field:'type',sortable:true" width="20">类型</th>
+				            <th data-options="field:'key',sortable:true" width="20">key</th>  
+				            <th data-options="field:'value',sortable:true" width="20">值</th> 
+				            <th data-options="field:'disValue',sortable:true" width="20">显示值</th> 
+				            <th data-options="field:'description',sortable:true" width="20">详细描述</th> 
+				            
 			          </tr>   
 			   </thead>   
 	     </table>   
@@ -48,13 +49,13 @@
 	               <div  class="formDiv">
 	         			<ul >
 	         			 	<li>
-	      						字段：<INPUT class=textfield size=18  name="" >  
+	      						类型：<INPUT class=textfield size=18  name="type" >  
 	     		     	 	</li> 
 	     				  	<li >
-	     		     			字段：<INPUT class=textfield size=18  name="" > 
+	     		     			key：<INPUT class=textfield size=18  name="key" > 
 	     		     	  	</li>
 			     		  	<li >
-			     			         字段：<INPUT class=textfield size=18  name="" > 
+			     			         描述：<INPUT class=textfield size=18  name="description" > 
 			     		  	</li>
 			     			<li>
 			     			      <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" href="javascript:void(0)"  onclick="FormData('PmsDictionaryTab','PmsDictionarySearchForm')">查询</a>
@@ -64,19 +65,18 @@
 	          </form>
 			<div class="operate">
 				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="saveOpen('PmsDictionarySaveDiv','PmsDictionarySaveIframe')">新增</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateOpen('PmsDictionaryTab','PmsDictionaryUpdateDiv','PmsDictionaryUpdateIframe','id')">修改(详细)</a>
-				<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="delete_info('PmsDictionaryTab','pmsdictionary','id')">删除</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateOpen('PmsDictionaryTab','PmsDictionaryUPdateDiv','PmsDictionaryUPdateIframe','id')">修改(详细)</a>
 			</div>
 	   </div>
 
 	    <!-- 添加界面 -->
-	    <div id="PmsDictionarySaveDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-add" title="添加" style="width:530px;height:350px;text-align: center;">
+	    <div id="PmsDictionarySaveDiv" class="easyui-window" closed="true" modal="true" iconCls="icon-add" title="添加" style="width:530px;height:350px;text-align: center;">
 			<iframe scrolling="auto" id="PmsDictionarySaveIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
 	   </div>
 
 	    <!-- 修改界面 -->
-	    <div id="PmsDictionaryUpdateDiv" class="easyui-window" closed="true" fit="true" closed="true" modal="true" iconCls="icon-edit" title="修改" style="width:530px;height:350px;text-align: center;">
-			<iframe scrolling="auto" id="PmsDictionaryUpdateIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
+	    <div id="PmsDictionaryUPdateDiv" class="easyui-window" closed="true" modal="true" iconCls="icon-edit" title="修改" style="width:530px;height:350px;text-align: center;">
+			<iframe scrolling="auto" id="PmsDictionaryUPdateIframe" frameborder="0"   style="width:97%;height:97%;margin-top: 1%;"></iframe>
 	   </div>
 
 	</BODY>
