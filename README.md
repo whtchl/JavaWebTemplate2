@@ -7,6 +7,7 @@
 =============================
 点击一个叶子，打开的界面是TSYSMenu的menuHref 从数据库中获得的。不是根据@Result中的路径。
 admincontrol.jsp  下面这段代码根据数据库中的配置跳转到相应的界面。
+
 		$('#menu ul').tree(
 					{
 						onClick : function(node) {
