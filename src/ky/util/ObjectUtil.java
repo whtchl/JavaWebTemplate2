@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 /**
  * 
- * @author tchl
+ * @author changbo
  *
  */
 public class ObjectUtil {

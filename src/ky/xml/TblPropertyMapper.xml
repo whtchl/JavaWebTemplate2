@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.TblPropertyMapper'>
+
+	<resultMap type="ky.entity.TblProperty" id="resultMap">
+	    <id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="entityname" property="entityname" />
+		<result column="description" property="description" />
+		<result column="entityid" property="entityid" />
+		
+		<result column="version" property="version" />
+		<result column="value" property="value" />
+		<result column="uniqueid" property="uniqueid" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.name !=null  and  searchBean.name!=''">
+							and obj.name=#{searchBean.name}
+						</if>
+					<if test="searchBean.entityname !=null  and  searchBean.entityname!=''">
+							and obj.entityname=#{searchBean.entityname}
+						</if>
+					<if test="searchBean.description !=null  and  searchBean.description!=''">
+							and obj.description=#{searchBean.description}
+						</if>
+					<if test="searchBean.entityid !=null  and  searchBean.entityid!=0">
+							and obj.entityid=#{searchBean.entityid}
+						</if>
+					<if test="searchBean.id !=null  and  searchBean.id!=0">
+							and obj.id=#{searchBean.id}
+						</if>
+					<if test="searchBean.version !=null  and  searchBean.version!=0">
+							and obj.version=#{searchBean.version}
+						</if>
+					<if test="searchBean.value !=null  and  searchBean.value!=''">
+							and obj.value=#{searchBean.value}
+						</if>
+					<if test="searchBean.uniqueid !=null  and  searchBean.uniqueid!=''">
+							and obj.uniqueid=#{searchBean.uniqueid}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM TBL_PROPERTY obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.TblProperty">
+		select * from TBL_PROPERTY
+		<where>
+				<if test="name !=null  and  name!=''">
+				and name=#{name}
+			</if>
+				<if test="entityname !=null  and  entityname!=''">
+				and entityname=#{entityname}
+			</if>
+				<if test="description !=null  and  description!=''">
+				and description=#{description}
+			</if>
+				<if test="entityid !=null  and  entityid!=0">
+				and entityid=#{entityid}
+			</if>
+				<if test="id !=null  and  id!=0">
+				and id=#{id}
+			</if>
+				<if test="version !=null  and  version!=0">
+				and version=#{version}
+			</if>
+				<if test="value !=null  and  value!=''">
+				and value=#{value}
+			</if>
+				<if test="uniqueid !=null  and  uniqueid!=''">
+				and uniqueid=#{uniqueid}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.TblProperty">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into TBL_PROPERTY(name,entityname,description,entityid,version,value,uniqueid)
+		values(#{name,jdbcType=VARCHAR},#{entityname,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{entityid,jdbcType=INTEGER},#{version,jdbcType=INTEGER},#{value,jdbcType=VARCHAR},#{uniqueid,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from TBL_PROPERTY
+		where id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.TblProperty'>
+		update TBL_PROPERTY set
+		name = #{name,jdbcType=VARCHAR},
+		entityname = #{entityname,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		entityid = #{entityid,jdbcType=INTEGER},
+		id = #{id,jdbcType=INTEGER},
+		version = #{version,jdbcType=INTEGER},
+		value = #{value,jdbcType=VARCHAR},
+		uniqueid = #{uniqueid,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from TBL_PROPERTY obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+
