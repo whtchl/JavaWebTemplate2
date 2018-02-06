@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class NewEntity {
 
-	public static String entityName = "PMS_DEPARTMENT";
+	public static String entityName = "PMS_PERSON";
 
 	public static void main(String[] args) {
 		new WriteEntity().Write(entityName.trim());

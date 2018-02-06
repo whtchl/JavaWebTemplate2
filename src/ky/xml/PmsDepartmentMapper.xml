@@ -26,6 +26,9 @@ PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
 					<if test="searchBean.departmentNum !=null  and  searchBean.departmentNum!=''">
 							and obj.department_num=#{searchBean.departmentNum}
 						</if>
+											<if test="searchBean.oemNumber == null ">
+							and obj.oem_number !='1'
+						</if>
 	</sql>
 
 	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
@@ -64,23 +67,22 @@ PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
 
 	<insert id="save" parameterType="ky.entity.PmsDepartment">
 		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
-			select idauto.nextval from dual
+			select seq_pms_department.nextval from dual
 		</selectKey>
-		<![CDATA[insert into PMS_DEPARTMENT(oem_number,department_name,department_num)
-		values(#{oemNumber,jdbcType=VARCHAR},#{departmentName,jdbcType=VARCHAR},#{departmentNum,jdbcType=VARCHAR})]]>
+		<![CDATA[insert into PMS_Department(id,department_num,department_name,oem_number)
+		values(#{id,jdbcType=INTEGER},trim(#{departmentNum,jdbcType=VARCHAR}),trim(#{departmentName,jdbcType=VARCHAR}),#{oemNumber,jdbcType=VARCHAR})]]>
 	</insert>
-
+ 
 	<delete id="delete" parameterType="java.lang.Integer">
 		delete from PMS_DEPARTMENT
 		where id=#{id}
 	</delete>
 
 	<update id='update' parameterType='ky.entity.PmsDepartment'>
-		update PMS_DEPARTMENT set
-		oem_number = #{oemNumber,jdbcType=VARCHAR},
-		department_name = #{departmentName,jdbcType=VARCHAR},
+		update PMS_Department set	
 		id = #{id,jdbcType=INTEGER},
-		department_num = #{departmentNum,jdbcType=VARCHAR}
+		department_num = #{departmentNum,jdbcType=VARCHAR},
+		department_name = #{departmentName,jdbcType=VARCHAR}
 		where id=#{id}
 	</update>
 

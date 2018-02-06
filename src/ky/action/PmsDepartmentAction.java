@@ -43,7 +43,7 @@ public class PmsDepartmentAction extends BaseAction<PmsDepartment>{
 
 	@Action(value = "select", results = {@Result(name = "select", location = "/pages/PmsDepartment/list.jsp") })
 	public String selete(){
-
+		 model.setOemNumber("1");
 		List<PmsDepartment> list = PmsDepartmentSer.selectList(model);
 		this.jsonArray(list);
 		return "select";
@@ -51,7 +51,7 @@ public class PmsDepartmentAction extends BaseAction<PmsDepartment>{
 
 	@Action(value = "save", results = {@Result(name = "save", location = "/pages/PmsDepartment/list.jsp") })
 	public String save(){
-
+		 model.setOemNumber("1");
 		this.returnU_D_S_info(PmsDepartmentSer.save(model));
 		return "save";
 	}

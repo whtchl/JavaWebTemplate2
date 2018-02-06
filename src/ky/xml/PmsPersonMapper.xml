@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ky.xml.PmsPersonMapper'>
+
+	<resultMap type="ky.entity.PmsPerson" id="resultMap">
+	    <id column="id" property="id" />
+		<result column="address" property="address" />
+		<result column="person_num" property="personNum" />
+		<result column="entrytime" property="entrytime" />
+		<result column="department_id" property="departmentId" />
+		<result column="person_name" property="personName" />
+		<result column="telephone" property="telephone" />
+		<result column="reigntime" property="reigntime" />
+		<result column="abbreviation" property="abbreviation" />
+		<result column="rserve_phone" property="rservePhone" />
+		<result column="zip_code" property="zipCode" />
+		<result column="idcard" property="idcard" />
+		
+		<result column="state" property="state" />
+		<result column="email" property="email" />
+	</resultMap>
+
+	<!-- 公用的判断条 -->
+	<sql id="configParamSql">
+					<if test="searchBean.address !=null  and  searchBean.address!=''">
+							and obj.address=#{searchBean.address}
+						</if>
+					<if test="searchBean.personNum !=null  and  searchBean.personNum!=''">
+							and obj.person_num=#{searchBean.personNum}
+						</if>
+					<if test="searchBean.entrytime !=null  and  searchBean.entrytime!=''">
+							and obj.entrytime=#{searchBean.entrytime}
+						</if>
+					<if test="searchBean.departmentId !=null  and  searchBean.departmentId!=''">
+							and obj.department_id=#{searchBean.departmentId}
+						</if>
+					<if test="searchBean.personName !=null  and  searchBean.personName!=''">
+							and obj.person_name=#{searchBean.personName}
+						</if>
+					<if test="searchBean.telephone !=null  and  searchBean.telephone!=''">
+							and obj.telephone=#{searchBean.telephone}
+						</if>
+					<if test="searchBean.reigntime !=null  and  searchBean.reigntime!=''">
+							and obj.reigntime=#{searchBean.reigntime}
+						</if>
+					<if test="searchBean.abbreviation !=null  and  searchBean.abbreviation!=''">
+							and obj.abbreviation=#{searchBean.abbreviation}
+						</if>
+					<if test="searchBean.rservePhone !=null  and  searchBean.rservePhone!=''">
+							and obj.rserve_phone=#{searchBean.rservePhone}
+						</if>
+					<if test="searchBean.zipCode !=null  and  searchBean.zipCode!=0">
+							and obj.zip_code=#{searchBean.zipCode}
+						</if>
+					<if test="searchBean.idcard !=null  and  searchBean.idcard!=''">
+							and obj.idcard=#{searchBean.idcard}
+						</if>
+					<if test="searchBean.id !=null  and  searchBean.id!=0">
+							and obj.id=#{searchBean.id}
+						</if>
+					<if test="searchBean.state !=null  and  searchBean.state!=''">
+							and obj.state=#{searchBean.state}
+						</if>
+					<if test="searchBean.email !=null  and  searchBean.email!=''">
+							and obj.email=#{searchBean.email}
+						</if>
+	</sql>
+
+	<select id="selectPage" resultMap="resultMap" parameterType="ky.util.PageView">
+		SELECT * FROM (SELECT A.*, ROWNUM RN FROM ( 
+			SELECT * FROM PMS_PERSON obj 
+				<where>
+					<include refid="configParamSql"/>
+				</where>
+				<if test="sort !=null  and  sort!=''">
+					order by obj.${sort} ${order}
+				</if>
+				<if test="sort==null">
+					order by obj.id desc
+				</if>
+			)A WHERE ROWNUM &lt;= 1* (#{pageNum}*#{pageSize}))
+		WHERE RN &gt;= (#{pageNum}-1)*#{pageSize}+1
+	</select>
+
+	<select id="selectList" resultMap="resultMap" parameterType="ky.entity.PmsPerson">
+		select * from PMS_PERSON
+		<where>
+				<if test="address !=null  and  address!=''">
+				and address=#{address}
+			</if>
+				<if test="personNum !=null  and  personNum!=''">
+				and person_num=#{personNum}
+			</if>
+				<if test="entrytime !=null  and  entrytime!=''">
+				and entrytime=#{entrytime}
+			</if>
+				<if test="departmentId !=null  and  departmentId!=''">
+				and department_id=#{departmentId}
+			</if>
+				<if test="personName !=null  and  personName!=''">
+				and person_name=#{personName}
+			</if>
+				<if test="telephone !=null  and  telephone!=''">
+				and telephone=#{telephone}
+			</if>
+				<if test="reigntime !=null  and  reigntime!=''">
+				and reigntime=#{reigntime}
+			</if>
+				<if test="abbreviation !=null  and  abbreviation!=''">
+				and abbreviation=#{abbreviation}
+			</if>
+				<if test="rservePhone !=null  and  rservePhone!=''">
+				and rserve_phone=#{rservePhone}
+			</if>
+				<if test="zipCode !=null  and  zipCode!=0">
+				and zip_code=#{zipCode}
+			</if>
+				<if test="idcard !=null  and  idcard!=''">
+				and idcard=#{idcard}
+			</if>
+				<if test="id !=null  and  id!=0">
+				and id=#{id}
+			</if>
+				<if test="state !=null  and  state!=''">
+				and state=#{state}
+			</if>
+				<if test="email !=null  and  email!=''">
+				and email=#{email}
+			</if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="ky.entity.PmsPerson">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+			select idauto.nextval from dual
+		</selectKey>
+		<![CDATA[insert into PMS_PERSON(address,person_num,entrytime,department_id,person_name,telephone,reigntime,abbreviation,rserve_phone,zip_code,idcard,state,email)
+		values(#{address,jdbcType=VARCHAR},#{personNum,jdbcType=VARCHAR},#{entrytime,jdbcType=VARCHAR},#{departmentId,jdbcType=VARCHAR},#{personName,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{reigntime,jdbcType=VARCHAR},#{abbreviation,jdbcType=VARCHAR},#{rservePhone,jdbcType=VARCHAR},#{zipCode,jdbcType=INTEGER},#{idcard,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})]]>
+	</insert>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from PMS_PERSON
+		where id=#{id}
+	</delete>
+
+	<update id='update' parameterType='ky.entity.PmsPerson'>
+		update PMS_PERSON set
+		address = #{address,jdbcType=VARCHAR},
+		person_num = #{personNum,jdbcType=VARCHAR},
+		entrytime = #{entrytime,jdbcType=VARCHAR},
+		department_id = #{departmentId,jdbcType=VARCHAR},
+		person_name = #{personName,jdbcType=VARCHAR},
+		telephone = #{telephone,jdbcType=VARCHAR},
+		reigntime = #{reigntime,jdbcType=VARCHAR},
+		abbreviation = #{abbreviation,jdbcType=VARCHAR},
+		rserve_phone = #{rservePhone,jdbcType=VARCHAR},
+		zip_code = #{zipCode,jdbcType=INTEGER},
+		idcard = #{idcard,jdbcType=VARCHAR},
+		id = #{id,jdbcType=INTEGER},
+		state = #{state,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<select id="total" resultType="int"	parameterType="ky.util.PageView">
+		select count(*) from PMS_PERSON obj
+		<where>
+			<include refid="configParamSql"/>
+		</where>
+	</select>
+
+</mapper>
+
