@@ -238,7 +238,7 @@ public class WriteEntity {
 		entity_txt.append("* ********************************************************").append("\r\n");
 		entity_txt.append("* @ClassName: ").append(entity_name).append("\r\n");
 		entity_txt.append("* @Description: ").append(comments_table).append("\r\n");
-		entity_txt.append("* @author 用wzl写的自动生成").append("\r\n");
+		entity_txt.append("* @author 用tchl写的自动生成").append("\r\n");
 		entity_txt.append("* @date ").append(new SimpleDateFormat("yyyy-MM-dd aa hh:mm:ss ").format(new Date())).append("\r\n");
 		entity_txt.append("*******************************************************").append("\r\n");
 		entity_txt.append("*/").append("\r\n");
